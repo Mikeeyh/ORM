@@ -1,0 +1,27 @@
+Setup SQLAlchemy:
+    pip install sqlalchemy
+    pip install psycopg2
+
+Setup Alembic:
+    pip install alembic
+    alembic init alembic (creates  a file that will store our migrations)
+
+In alembic.ini:
+    sqlalchemy.url = postgres+psycopg2://postgres_username:postgres_password@localhost/db_name
+
+In models.py:
+    CONNECTION_STRING = 'postgresql+psycopg2://postgres-user:password@localhost:5432/sql_alchemy_exercise'
+
+    engine = create_engine(CONNECTION_STRING)
+    (adding base model)
+    Base = declarative_base()
+
+In env.py:
+    from models import Base
+    target_metadata = Base.metadata
+
+After creating first model:
+    (makemigrations)
+    alembic revision --autogenerate -m "Add first model"
+    (migrate)
+    alembic upgrade head

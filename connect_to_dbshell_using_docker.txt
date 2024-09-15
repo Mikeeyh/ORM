@@ -1,0 +1,15 @@
+(.venv) PS C:\Users\Mike\PycharmProjects\ORM\django_model_basics_exercices> docker exec -it django_model_
+basics-db-1 bin/bash
+bash-5.1# psql -U postgres-user -d django_models_exercise
+psql (13.1)
+Type "help" for help.
+
+django_models_exercise=# select * from main_app_person;
+ id | name | age 
+----+------+-----
+(0 rows)
+
+
+django_model_
+basics-db-1 
+This is the name of the container

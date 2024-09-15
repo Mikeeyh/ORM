@@ -1,0 +1,104 @@
+1. After creating the model:
+    a) python manage.py makemigrations
+    b) python manage.py migrate
+
+2) Adding some data to the DB table for this model.
+
+3) Creating custom empty migration:
+    - python manage.py makemigrations main_app --name migrate_app_group --empty
+
+4) We go to the custom migration file:
+
+    from django.db import migrations
+
+    class Migration(migrations.Migration):
+
+        dependencies = [
+            ('main_app', '0009_person'),
+        ]
+
+        operations = [
+        ]
+
+
+5) Adding function:
+
+from django.db import migrations
+
+"""
+
+def set_age_group(apps, schema_editor):
+    person_model = apps.get_model('main_app', 'Person')  # taking our app name (main_app) and our model name (Person)
+
+    people = person_model.objects.all()
+
+    for person in people:
+        if person.age <= 12:
+            person.age_group = "Child"
+        elif person.age <= 17:
+            person.age_group = "Teen"
+        else:
+            person.age_group = "Adult"
+
+    person_model.objects.bulk_update(people, ['age_group'])
+    # We can replace this line with person.save() but this will save record by record, so it is slow.
+
+ """
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('main_app', '0009_person'),
+    ]
+
+    operations = [
+    ]
+
+6) Adding reverse function:
+
+def set_age_group(apps, schema_editor):
+    person_model = apps.get_model('main_app', 'Person')  # taking our app name (main_app) and our model name (Person)
+
+    people = person_model.objects.all()
+
+    for person in people:
+        if person.age <= 12:
+            person.age_group = "Child"
+        elif person.age <= 17:
+            person.age_group = "Teen"
+        else:
+            person.age_group = "Adult"
+
+    person_model.objects.bulk_update(people, ['age_group'])
+    # We can replace this line with person.save() but this will save record by record, so it is slow.
+
+"""
+
+def set_age_group_default(apps, schema_editor):
+    person_model = apps.get_model('main_app', 'Person')
+
+    for person in person_model.objects.all():
+        person.age_group = person_model._meta.get_field('age_group').default
+        # This is equal to: person.age_group = "No age group", But we take it dynamically.
+
+        person.save()  # could be better
+
+"""
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('main_app', '0009_person'),
+    ]
+
+    operations = [
+    ]
+
+6) Adding the functions in 'operations':
+
+    operations = [
+        migrations.RunPython(set_age_group, set_age_group_default)
+    ]
+
+8) Run migration:
+    - python manage.py migrate
